@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using QuotationManager.Models
+@using QuotationManager.Web.Models.AccountViewModels
+@model QuotationManager.Web.Models.AccountViewModels.LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+
+@{
+    ViewData["Title"] = "Log in";
+}
+@Html.AntiForgeryToken()
+
+<div id='app-account'>Loading...</div>
+
+@section scripts {
+    <script src="~/dist/account.js" asp-append-version="true"></script>
+}
