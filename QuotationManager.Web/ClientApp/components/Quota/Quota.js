@@ -1,22 +1,30 @@
 ﻿import axios from 'axios';
+import moment from 'moment';
 
 export default {
     data: () => ({
         dialog: false,
         headers: [
             {
-                text: 'Dessert (100g serving)',
+                text: 'Город',
                 align: 'left',
                 sortable: false,
-                value: 'name'
+                value: 'city.name'
             },
-            { text: 'Calories', value: 'calories' },
-            { text: 'Fat (g)', value: 'fat' },
-            { text: 'Carbs (g)', value: 'carbs' },
-            { text: 'Protein (g)', value: 'protein' },
-            { text: 'Actions', value: 'name', sortable: false }
+            { text: 'Сумма рефинансирования', value: 'refinancingAmount' },
+            { text: 'Цель рефинансирования', value: 'refinancingTarget' },
+            { text: 'Комментарий', value: 'comment' },
+            { text: 'Дата создания', value: 'createdAt' },
+            { text: 'Дата редактирования', value: 'modifiedAt' }
+        //{ text: 'Fat (g)', value: 'fat' },
+            //{ text: 'Carbs (g)', value: 'carbs' },
+            //{ text: 'Protein (g)', value: 'protein' },
+            //{ text: 'Actions', value: 'name', sortable: false }
         ],
-        desserts: [],
+        quotas: [],
+        targets: [],
+        cities: [],
+        contributions: [],
         editedIndex: -1,
         editedItem: {
             name: '',
@@ -36,7 +44,7 @@ export default {
 
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+            return this.editedIndex === -1 ? 'Создать квоту' : 'Редактировать';
         }
     },
 
@@ -45,96 +53,73 @@ export default {
             val || this.close();
         }
     },
-
+    filters: {
+        russianDate: function (date) {
+            if (date)
+                return moment(date).format('DD.MM.YYYY HH.mm');
+            else
+                return '';
+        },
+        getEnumDisplayName: function (enumValue, targets) {
+            debugger;
+            if (enumValue) {
+                for (var t in targets) {
+                    if (targets.hasOwnProperty(t)) {
+                        if (t === enumValue.toString()) {
+                            return targets[t].text;
+                        }
+                    }
+                }
+            }
+            return '';
+        }
+    },
     created () {
         this.initialize();
     },
 
     methods: {
         initialize() {
-            this.desserts = [
-                {
-                    name: 'Frozen Yogurt',
-                    calories: 159,
-                    fat: 6.0,
-                    carbs: 24,
-                    protein: 4.0
-                },
-                {
-                    name: 'Ice cream sandwich',
-                    calories: 237,
-                    fat: 9.0,
-                    carbs: 37,
-                    protein: 4.3
-                },
-                {
-                    name: 'Eclair',
-                    calories: 262,
-                    fat: 16.0,
-                    carbs: 23,
-                    protein: 6.0
-                },
-                {
-                    name: 'Cupcake',
-                    calories: 305,
-                    fat: 3.7,
-                    carbs: 67,
-                    protein: 4.3
-                },
-                {
-                    name: 'Gingerbread',
-                    calories: 356,
-                    fat: 16.0,
-                    carbs: 49,
-                    protein: 3.9
-                },
-                {
-                    name: 'Jelly bean',
-                    calories: 375,
-                    fat: 0.0,
-                    carbs: 94,
-                    protein: 0.0
-                },
-                {
-                    name: 'Lollipop',
-                    calories: 392,
-                    fat: 0.2,
-                    carbs: 98,
-                    protein: 0
-                },
-                {
-                    name: 'Honeycomb',
-                    calories: 408,
-                    fat: 3.2,
-                    carbs: 87,
-                    protein: 6.5
-                },
-                {
-                    name: 'Donut',
-                    calories: 452,
-                    fat: 25.0,
-                    carbs: 51,
-                    protein: 4.9
-                },
-                {
-                    name: 'KitKat',
-                    calories: 518,
-                    fat: 26.0,
-                    carbs: 65,
-                    protein: 7
-                }
-            ];
+            var componentData = this;
+           // componentData.onloading(true);
+            axios.all([
+                    axios.post('/api/Quota/Get', {}),
+                    axios.post('/api/Quota/GetLookups', {})
+                ])
+                .then(axios.spread(function(quotas, lookups) {
+                    debugger;
+                    if (typeof (quotas.data) !== "object" || typeof (lookups.data) !== "object") {
+                        return;
+                    }
+                    componentData.quotas = quotas.data;
+                    componentData.cities = lookups.data.cities;
+                    componentData.contributions = lookups.data.contributions;
+
+                    var refTargets = lookups.data.refinancingTargets;
+                    for (var t in refTargets) {
+                        if (refTargets.hasOwnProperty(t)) {
+                            componentData.targets.push({
+                                text: t,
+                                value: refTargets[t]
+                            });
+                        }
+                    }
+                }))
+                .catch(function(error) {
+                    debugger;
+                    console.log(error);
+                });
         },
 
         editItem (item) {
-            this.editedIndex = this.desserts.indexOf(item);
+            this.editedIndex = this.quotas.indexOf(item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
         },
 
         deleteItem (item) {
-            const index = this.desserts.indexOf(item);
-            confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1);
+            const index = this.quotas.indexOf(item);
+            confirm('Вы действительно хотите удалить элемент?') && this.quotas.splice(index, 1);
         },
 
         close () {
@@ -148,9 +133,9 @@ export default {
 
         save () {
             if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem);
+                Object.assign(this.quotas[this.editedIndex], this.editedItem);
             } else {
-                this.desserts.push(this.editedItem);
+                this.quotas.push(this.editedItem);
             }
             this.close();
         }

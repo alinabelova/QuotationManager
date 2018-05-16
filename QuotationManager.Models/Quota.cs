@@ -24,11 +24,13 @@ namespace QuotationManager.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        //TODO
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         [StringLength(1024)]
         public string Comment { get; set; }
 
+        //TODO
         [Required]
         [Range(0.0, 100.0)]
         public int BaseAmount { get; set; }

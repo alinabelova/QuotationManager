@@ -3,7 +3,7 @@
         <v-content>
             <div>
                 <v-dialog v-model="dialog" max-width="500px">
-                    <v-btn slot="activator" color="primary" class="mb-2">New Item</v-btn>
+                    <v-btn slot="activator" color="primary" class="mb-2">Создать квоту</v-btn>
                     <v-card>
                         <v-card-title>
                             <span class="headline">{{ formTitle }}</span>
@@ -11,17 +11,37 @@
                         <v-card-text>
                             <v-container grid-list-md>
                                 <v-layout wrap>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                                    <v-flex xs12 sm6 md6>
+                                        <v-select :items="cities"
+                                                  v-model="editedItem.cityId"
+                                                  item-value="id"
+                                                  item-text="name"
+                                                  :label="headers[0].text" 
+                                                  :rules="[(v) => !!v || 'required']"
+                                                  required/>
+                                        <!--<v-text-field v-model="editedItem.city.name" label="Город"></v-text-field>-->
                                     </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                                    <v-flex xs12 sm6 md6>
+                                        <v-text-field type="number" step="0.01"
+                                                      v-model="editedItem.refinancingAmount"
+                                                      :label="headers[1].text"
+                                                      :rules="[(v) => v && (v > 0 || v < 5000000 ) || 'Значчение должно быть в пределах 0..5000000']"/>
+                                        <!--<v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>-->
                                     </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
+                                    <v-flex xs12 sm12 md12>
+                                        <v-select :items="targets"
+                                                  v-model="editedItem.refinancingTarget"
+                                                  item-value="value"
+                                                  item-text="text"
+                                                  :label="headers[2].text"/>
                                     </v-flex>
+
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
+                                        <DatePicker required 
+                                                    :rules="[(v) => !!v || 'required']"
+                                                    v-model="editedItem.createdAt"
+                                                    :label="headers[4].text"></DatePicker>
+                                     
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
                                         <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
@@ -31,21 +51,22 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                            <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="close">Закрыть</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="save">Сохранить</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
                 <v-data-table :headers="headers"
-                              :items="desserts"
+                              :items="quotas"
                               hide-actions
                               class="elevation-1">
                     <template slot="items" slot-scope="props">
-                        <td>{{ props.item.name }}</td>
-                        <td class="text-xs-right">{{ props.item.calories }}</td>
-                        <td class="text-xs-right">{{ props.item.fat }}</td>
-                        <td class="text-xs-right">{{ props.item.carbs }}</td>
-                        <td class="text-xs-right">{{ props.item.protein }}</td>
+                        <td>{{ props.item.city.name }}</td>
+                        <td class="text-xs-right">{{ props.item.refinancingAmount }}</td>
+                        <td class="text-xs-right">{{ props.item.refinancingTarget | getEnumDisplayName(targets) }}</td>
+                        <td class="text-xs-right">{{ props.item.comment }}</td>
+                        <td class="text-xs-right">{{ props.item.createdAt | russianDate}}</td>
+                        <td class="text-xs-right">{{ props.item.modifiedAt | russianDate}}</td>
                         <td class="justify-center layout px-0">
                             <v-btn icon class="mx-0" @click="editItem(props.item)">
                                 <v-icon color="teal">edit</v-icon>
@@ -53,10 +74,13 @@
                             <v-btn icon class="mx-0" @click="deleteItem(props.item)">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
+                            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+                                <v-icon color="teal">save_alt</v-icon>
+                            </v-btn>
                         </td>
                     </template>
                     <template slot="no-data">
-                        <v-btn color="primary" @click="initialize">Reset</v-btn>
+                        <v-btn color="primary" @click="initialize">Обновить</v-btn>
                     </template>
                 </v-data-table>
             </div>

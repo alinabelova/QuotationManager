@@ -31,8 +31,9 @@ namespace QuotationManager.DataAccess.Modules
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<EfRepository<Quota>>();
-
+            services.AddTransient<IRepository<Quota>, EfRepository<Quota>>();
+            services.AddTransient<IRepository<City>, EfRepository<City>>();
+            services.AddTransient<IRepository<Contribution>, EfRepository<Contribution>>();
             return services;
         }
     }

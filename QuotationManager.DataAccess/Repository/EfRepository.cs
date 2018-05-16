@@ -10,10 +10,10 @@ namespace QuotationManager.DataAccess.Repository
 {
     public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly DbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
-        public EfRepository(DbContext context)
+        public EfRepository(ApplicationDbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
