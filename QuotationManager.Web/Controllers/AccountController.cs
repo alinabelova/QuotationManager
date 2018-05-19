@@ -35,7 +35,7 @@ namespace QuotationManager.Web.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             //_emailSender = emailSender;
-            _logger = logger;
+            //_logger = logger;
         }
 
         [TempData]
@@ -65,17 +65,10 @@ namespace QuotationManager.Web.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    //_logger.LogInformation("User logged in.");
                     return Ok(returnUrl);
                 }
-                else
-                {
-                    //TODO
-                    //ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return BadRequest(new { message = "error" });
-                }
             }
-
             return BadRequest(new { message = "error" });
         }
         
@@ -91,21 +84,11 @@ namespace QuotationManager.Web.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
                     //_logger.LogInformation("User created a new account with password.");
                     return Ok(returnUrl);
                 }
                 //AddErrors(result);
             }
-
-            // If we got this far, something failed, redisplay form
-            // return View(model);
             return BadRequest(new { message = "error" });
         }
 

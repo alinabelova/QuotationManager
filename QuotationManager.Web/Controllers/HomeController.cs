@@ -15,15 +15,6 @@ namespace QuotationManager.Web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        //private readonly GuestDataService _guestDataService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IRepository<Quota> _quotaRepository;
-        public HomeController(UserManager<ApplicationUser> userManager, IRepository<Quota> quotaRepository)
-        {
-            _userManager = userManager;
-            _quotaRepository = quotaRepository;
-        }
-
         public IActionResult Index()
         {
             return View();

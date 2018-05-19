@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,20 +34,20 @@ namespace QuotationManager.DataAccess.Repository
             return _dbSet.FindAsync(id);
         }
 
-        public void Create(TEntity item)
+        public async Task CreateAsync(TEntity item)
         {
             _dbSet.Add(item);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
-        public void Update(TEntity item)
+        public async Task UpdateAsync(TEntity item)
         {
             _context.Entry(item).State = EntityState.Modified;
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
-        public void Remove(TEntity item)
+        public async Task RemoveAsync(TEntity item)
         {
             _dbSet.Remove(item);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
         public Task<List<TEntity>> GetWithInclude(params Expression<Func<TEntity, object>>[] includeProperties)
         {
@@ -58,6 +59,11 @@ namespace QuotationManager.DataAccess.Repository
         {
             var query = Include(includeProperties);
             return query.Where(predicate);
+        }
+
+        public async Task<int> TotalElementsAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbSet.CountAsync(predicate, CancellationToken.None);
         }
 
         private IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)

@@ -17,16 +17,19 @@
                                             <v-flex xs12>
                                                 <v-text-field v-model="email" label="Email"
                                                               :rules="emailRules"
+                                                              v-validate="'required|email'"
                                                               required />
                                             </v-flex>
                                             <v-flex xs12>
                                                 <v-text-field label="Пароль" v-model="password" type="password"
                                                               :rules="passwordRules"
+                                                              v-validate="'required'"
                                                               required />
                                             </v-flex>
                                             <v-flex xs12>
                                                 <v-text-field label="Повторите пароль" v-model="confirmPassword" type="password"
                                                               :rules="[(v) => !!v || 'required']"
+                                                              v-validate="'required'"
                                                               required />
                                             </v-flex>
 
@@ -69,25 +72,6 @@
                 </section>
             </v-form>
         </v-content>
-        <!--<v-dialog v-model="dialogForgotPassword" max-width="500px">
-            <v-form>
-                <v-card>
-                    <v-card-title>
-                        <h2 v-lang.toSetTitle></h2>
-                    </v-card-title>
-                    <v-card-text>
-                        <p>{{label('toSet')}}{{label('pset')}}</p>
-                        <v-text-field :label="label('email')" v-model="email" required ref="sendEmail"/>
-                        <p>{{label('receiveInsructions')}}<a href='mailto:events@auroraprize.com'>events@auroraprize.com</a>{{label('receiveInsructions2')}}{{label('pset')}}</p>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn dark color="blue" @click.prevent.stop="sendMail" type="submit"> {{label('receiveInstructions')}}</v-btn>
-                        <v-btn dark color="blue" @click.stop="dialogForgotPassword=false"> {{label('close')}}</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-form>
-        </v-dialog>-->
-
         <v-dialog v-model="dialogMessage" max-width="500px">
             <v-card>
                 <v-card-title>

@@ -23,17 +23,14 @@ namespace QuotationManager.Models
         public List<AdditionalContribution> AdditionalContributions { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        //TODO
-        public DateTime ModifiedAt { get; set; } = DateTime.Now;
+        
+        public DateTime? ModifiedAt { get; set; } = DateTime.Now;
 
         [StringLength(1024)]
         public string Comment { get; set; }
 
-        //TODO
-        [Required]
         [Range(0.0, 100.0)]
-        public int BaseAmount { get; set; }
+        public decimal InterestRate { get; set; }
 
         [Required]
         public string ClientId { get; set; }

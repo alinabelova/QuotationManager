@@ -34,15 +34,6 @@ namespace QuotationManager.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
-
-            // Add application services.
-            // services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<MainConfig>(Configuration.GetSection("MainConfig"));
             services.AddWebModule();
 
@@ -85,31 +76,13 @@ namespace QuotationManager.Web
 
 
             app.UseAuthentication();
-
-            //app.UseLogApiRequest();
-
-
+            
             app.UseMvcWithDefaultRoute();
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //    routes.MapSpaFallbackRoute("spa-fallback", new { controller = "home", action = "index" });
-            //});
-            // app.UseAuthentication();
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
         }
     }
 }

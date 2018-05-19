@@ -12,7 +12,7 @@ using System;
 namespace QuotationManager.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180514132241_Initial")]
+    [Migration("20180519093410_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,8 +242,6 @@ namespace QuotationManager.DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("BaseAmount");
-
                     b.Property<int>("CityId");
 
                     b.Property<string>("ClientId")
@@ -254,7 +252,9 @@ namespace QuotationManager.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<DateTime>("ModifiedAt");
+                    b.Property<decimal>("InterestRate");
+
+                    b.Property<DateTime?>("ModifiedAt");
 
                     b.Property<decimal>("RefinancingAmount");
 

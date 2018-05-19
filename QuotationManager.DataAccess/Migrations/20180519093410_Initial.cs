@@ -195,12 +195,12 @@ namespace QuotationManager.DataAccess.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BaseAmount = table.Column<int>(nullable: false),
                     CityId = table.Column<int>(nullable: false),
                     ClientId = table.Column<string>(nullable: false),
                     Comment = table.Column<string>(maxLength: 1024, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ModifiedAt = table.Column<DateTime>(nullable: false),
+                    InterestRate = table.Column<decimal>(nullable: false),
+                    ModifiedAt = table.Column<DateTime>(nullable: true),
                     RefinancingAmount = table.Column<decimal>(nullable: false),
                     RefinancingTarget = table.Column<int>(nullable: false)
                 },
@@ -311,6 +311,7 @@ namespace QuotationManager.DataAccess.Migrations
                 name: "IX_Quotas_ClientId",
                 table: "Quotas",
                 column: "ClientId");
+
             migrationBuilder.Sql(@"SET IDENTITY_INSERT dbo.Cities ON
                 insert into dbo.Cities(id, name, significanceLevel)
                 select 1, 'Красноярск', 10 union all

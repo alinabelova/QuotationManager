@@ -241,8 +241,6 @@ namespace QuotationManager.DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("BaseAmount");
-
                     b.Property<int>("CityId");
 
                     b.Property<string>("ClientId")
@@ -253,7 +251,9 @@ namespace QuotationManager.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<DateTime>("ModifiedAt");
+                    b.Property<decimal>("InterestRate");
+
+                    b.Property<DateTime?>("ModifiedAt");
 
                     b.Property<decimal>("RefinancingAmount");
 
